@@ -2,38 +2,23 @@ export default function Stories() {
   const stories = [
     {
       title: 'The Gold Ring',
+      objectName: 'Gold Wedding Band, c. 1942',
       excerpt: 'A wedding ring passed down through four generations of women, each adding their own story.',
-      author: 'Maria Santos'
     },
     {
-      title: 'Grandfather\'s Watch',
+      title: "Grandfather's Watch",
+      objectName: 'Seiko 5 Automatic, 1982',
       excerpt: 'A Seiko watch from 1982 that stopped working the day he passed, and then started again.',
-      author: 'James Park'
     },
     {
       title: 'Letters from Home',
+      objectName: 'Handwritten Letters, 1970s–1990s',
       excerpt: 'Handwritten letters from her mother, kept in a shoebox for 30 years, discovered after her death.',
-      author: 'Emma Johnson'
     },
-    {
-      title: 'The Wooden Spoon',
-      excerpt: 'A carved wooden cooking spoon that brought a refugee family back to their ancestry and roots.',
-      author: 'Hassan Al-Rashid'
-    },
-    {
-      title: 'A Jacket of Memories',
-      excerpt: 'His father\'s military jacket, unworn for decades, finally tried on at age 40.',
-      author: 'Alexander Volkov'
-    },
-    {
-      title: 'The Blue Blanket',
-      excerpt: 'A tattered blanket from childhood that healed the relationship between a mother and daughter.',
-      author: 'Sophie Benoit'
-    }
   ];
 
   return (
-    <section className="bg-white py-20 px-4 sm:px-6 lg:px-8">
+    <section id="stories" className="bg-white py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="mb-12">
           <h2 className="text-4xl sm:text-5xl font-light text-stone-900 tracking-tight mb-3">
@@ -50,15 +35,21 @@ export default function Stories() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
+              <p className="text-xs text-amber-700 font-medium uppercase tracking-widest mb-2">
+                {story.objectName}
+              </p>
               <h3 className="text-lg font-light text-stone-900 group-hover:text-amber-700 transition-colors duration-300 mb-2">
                 {story.title}
               </h3>
-              <p className="text-sm text-stone-600 font-light leading-relaxed mb-3">
+              <p className="text-sm text-stone-600 font-light leading-relaxed mb-4">
                 {story.excerpt}
               </p>
-              <p className="text-xs text-amber-700 font-medium uppercase tracking-widest">
-                by {story.author}
-              </p>
+              <a
+                href="#"
+                className="text-xs text-stone-900 font-medium uppercase tracking-widest border-b border-stone-400 hover:border-amber-700 hover:text-amber-700 transition-colors duration-300 pb-0.5"
+              >
+                Read Story
+              </a>
             </article>
           ))}
         </div>
