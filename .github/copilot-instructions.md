@@ -1,0 +1,11 @@
+- Use Next.js App Router with TypeScript.
+- Use Tailwind CSS.
+- Keep the code simple, readable, and maintainable.
+- Avoid unnecessary dependencies.
+- Use semantic HTML and accessible form markup.
+- The visual tone should feel cinematic, human, warm, and uncluttered.
+- Do not introduce a database.
+- Stories should be sourced from local markdown files in /content/stories.
+- Filmmaker bios should come from a simple local data file.
+- Prefer small reusable components over large files.
+- Do not modify config files unless explicitly asked.
