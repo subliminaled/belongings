@@ -51,56 +51,27 @@ export default function Contact() {
             )}
           </div>
 
-          {/* Contact & Social Section */}
-          <div className="space-y-8">
+          {/* Contact Section */}
+          <div>
             <div>
               <h3 className="text-sm font-medium uppercase tracking-widest text-amber-500 mb-4">
                 Get in Touch
-              </h3>
-              <div className="space-y-4">
+              </h3>                
+                <p className="text-sm text-stone-300 font-light leading-relaxed max-w-sm">
+                  Questions, collaboration inquiries, or story leads are always welcome.
+                </p><br/>                
+              <div className="space-y-4 border-t border-stone-800 pt-4 md:border-t-0 md:pt-0">
                 <div>
                   <p className="text-xs text-amber-500 uppercase tracking-widest font-medium mb-1">Email</p>
                   <a href="mailto:hello@belongings.film" className="text-stone-100 font-light text-base hover:text-amber-400 transition-colors">
-                    hello@belongings.film
+                    belong@subliminaledfilms.com
                   </a>
                 </div>
-                <div>
-                  <p className="text-xs text-amber-500 uppercase tracking-widest font-medium mb-1">Press</p>
-                  <a href="mailto:press@belongings.film" className="text-stone-100 font-light text-base hover:text-amber-400 transition-colors">
-                    press@belongings.film
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-medium uppercase tracking-widest text-amber-500 mb-4">
-                Follow Along
-              </h3>
-              <div className="flex space-x-4">
-                {['Instagram', 'Twitter', 'Vimeo', 'YouTube'].map((platform) => (
-                  <a
-                    key={platform}
-                    href="#"
-                    className="text-xs text-stone-300 hover:text-amber-400 transition-colors font-light uppercase tracking-widest border-b border-transparent hover:border-amber-400"
-                  >
-                    {platform}
-                  </a>
-                ))}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="pt-8 border-t border-stone-800 flex flex-col sm:flex-row justify-between items-center text-stone-400 font-light text-xs">
-          <p>© 2026 Belongings. All rights reserved.</p>
-          <div className="flex space-x-6 mt-4 sm:mt-0">
-            <a href="#" className="hover:text-stone-100 transition-colors">Privacy</a>
-            <a href="#" className="hover:text-stone-100 transition-colors">Terms</a>
-            <a href="#" className="hover:text-stone-100 transition-colors">Credits</a>
-          </div>
-        </div>
       </div>
     </section>
   );
