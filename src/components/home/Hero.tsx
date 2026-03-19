@@ -1,10 +1,10 @@
 export default function Hero() {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-stone-950">
+    <section id="hero" className="relative min-h-screen overflow-hidden bg-stone-950">
 
       {/* Background image — full bleed */}
       <img
-        src="/images/hero/background.png"
+        src="/images/stories/ren/ren-stone.png"
         alt=""
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover object-center"
@@ -23,7 +23,7 @@ export default function Hero() {
           <div className="flex items-center gap-3 mb-6">
             <span className="block w-8 h-px bg-amber-600" />
             <span className="text-xs text-amber-500 tracking-widest uppercase font-medium">
-              A Documentary Film
+               A short web docuseries
             </span>
           </div>
 
@@ -36,16 +36,16 @@ export default function Hero() {
           <div className="w-16 h-px bg-stone-500 mb-6" />
 
           {/* Subhead */}
-          <p className="text-base sm:text-lg text-stone-200 font-light leading-relaxed max-w-xl xl:max-w-2xl mb-10">
-            An intimate portrait of the objects we carry, and everything they say about who we are.
+          <p className="text-base sm:text-lg text-stone-200 font-light leading-relaxed max-w-xl xl:max-w-3xl mb-8">
+            Exploring real human connections to the material world
           </p>
 
           {/* CTA */}
           <a
-            href="#stories"
+            href="#submit-story"
             className="self-start px-8 py-3 border border-amber-700 text-white text-xs tracking-widest uppercase font-light hover:bg-amber-700/20 hover:border-amber-500 transition-colors duration-300"
           >
-            Explore Stories
+            Tell Your Story
           </a>
         </div>
 

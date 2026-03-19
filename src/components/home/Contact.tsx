@@ -15,7 +15,7 @@ export default function Contact() {
   };
 
   return (
-    <section className="bg-stone-900 text-stone-50 py-20 px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="bg-stone-900 text-stone-50 py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 mb-12">
           {/* Newsletter Section */}

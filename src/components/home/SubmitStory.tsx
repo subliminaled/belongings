@@ -92,7 +92,7 @@ export default function SubmitStory() {
     'block text-xs font-medium text-stone-700 uppercase tracking-widest mb-2';
 
   return (
-    <section className="bg-stone-100 py-20 px-4 sm:px-6 lg:px-8">
+    <section id="submit-story" className="bg-stone-100 py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         <div className="mb-12">
           <h2 className="text-4xl sm:text-5xl font-light text-stone-900 tracking-tight mb-3">
