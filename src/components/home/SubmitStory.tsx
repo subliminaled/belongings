@@ -1,6 +1,7 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import { useUploadThing } from '@/lib/uploadthing';
 
 interface FormFields {
   fullName: string;
@@ -20,6 +21,8 @@ const IMAGE_MAX = 2;
 
 export default function SubmitStory() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormFields>({
     fullName: '',
     email: '',
@@ -31,6 +34,8 @@ export default function SubmitStory() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   // Tracks all created URLs so we can revoke them on unmount.
   const createdUrlsRef = useRef<Set<string>>(new Set());
+
+  const { startUpload } = useUploadThing('storyImageUploader');
 
   // Revoke any un-revoked URLs when the component unmounts.
   useEffect(() => {
@@ -72,17 +77,45 @@ export default function SubmitStory() {
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    images.forEach((entry) => {
-      URL.revokeObjectURL(entry.url);
-      createdUrlsRef.current.delete(entry.url);
-    });
-    setImages([]);
-    setFormData({ fullName: '', email: '', phone: '', objectName: '', description: '' });
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Upload images first (if any)
+      let imageUrls: string[] = [];
+      if (images.length > 0) {
+        const uploaded = await startUpload(images.map((entry) => entry.file));
+        if (!uploaded) throw new Error('Image upload failed. Please try again.');
+        // ufsUrl is the UploadThing CDN URL (v7+); fall back to url for older SDK versions.
+        imageUrls = uploaded.map((f) => f.ufsUrl ?? f.url);
+      }
+
+      // Submit form fields + image URLs
+      const res = await fetch('/api/submit-story', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, imageUrls }),
+      });
+      if (!res.ok) throw new Error('Submission failed. Please try again.');
+
+      // Reset form
+      images.forEach((entry) => {
+        URL.revokeObjectURL(entry.url);
+        createdUrlsRef.current.delete(entry.url);
+      });
+      setImages([]);
+      setFormData({ fullName: '', email: '', phone: '', objectName: '', description: '' });
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch (err) {
+      console.error('Story submission error:', err);
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputClass =
@@ -281,11 +314,18 @@ export default function SubmitStory() {
               )}
             </div>
 
+            {error && (
+              <p role="alert" className="text-sm text-red-700 font-light bg-red-50 border border-red-200 px-4 py-3">
+                {error}
+              </p>
+            )}
+
             <button
               type="submit"
-              className="w-full px-8 py-3 bg-stone-900 text-stone-50 hover:bg-stone-800 transition-colors duration-300 font-light tracking-wide text-sm"
+              disabled={loading}
+              className="w-full px-8 py-3 bg-stone-900 text-stone-50 hover:bg-stone-800 transition-colors duration-300 font-light tracking-wide text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Submit Your Story
+              {loading ? 'Submitting…' : 'Submit Your Story'}
             </button>
           </form>
         )}
