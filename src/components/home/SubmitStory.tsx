@@ -1,6 +1,10 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import { generateReactHelpers } from '@uploadthing/react';
+import type { OurFileRouter } from '@/lib/uploadthing';
+
+const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
 interface FormFields {
   fullName: string;
@@ -20,6 +24,8 @@ const IMAGE_MAX = 2;
 
 export default function SubmitStory() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormFields>({
     fullName: '',
     email: '',
@@ -31,6 +37,8 @@ export default function SubmitStory() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   // Tracks all created URLs so we can revoke them on unmount.
   const createdUrlsRef = useRef<Set<string>>(new Set());
+
+  const { startUpload, isUploading } = useUploadThing('imageUploader');
 
   // Revoke any un-revoked URLs when the component unmounts.
   useEffect(() => {
@@ -72,17 +80,46 @@ export default function SubmitStory() {
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    images.forEach((entry) => {
-      URL.revokeObjectURL(entry.url);
-      createdUrlsRef.current.delete(entry.url);
-    });
-    setImages([]);
-    setFormData({ fullName: '', email: '', phone: '', objectName: '', description: '' });
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
+    setSubmitError(null);
+    setSubmitting(true);
+
+    try {
+      // Upload images to UploadThing and collect their URLs
+      const uploaded = await startUpload(images.map((entry) => entry.file));
+      const imageUrls = (uploaded ?? []).map((f) => f.ufsUrl).filter(Boolean);
+
+      const res = await fetch('/api/submit-story', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          imageUrls,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        setSubmitError(data.error ?? 'Submission failed. Please try again.');
+        return;
+      }
+
+      // Clean up preview URLs
+      images.forEach((entry) => {
+        URL.revokeObjectURL(entry.url);
+        createdUrlsRef.current.delete(entry.url);
+      });
+      setImages([]);
+      setFormData({ fullName: '', email: '', phone: '', objectName: '', description: '' });
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch {
+      setSubmitError('An unexpected error occurred. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const inputClass =
@@ -216,7 +253,7 @@ export default function SubmitStory() {
               <span className={labelClass}>
                 Upload Images{' '}
                 <span className="text-stone-400 normal-case tracking-normal font-light">
-                  (up to {IMAGE_MAX}, optional)
+                  (at least 1, up to {IMAGE_MAX})
                 </span>
               </span>
 
@@ -281,11 +318,18 @@ export default function SubmitStory() {
               )}
             </div>
 
+            {submitError && (
+              <p className="text-sm text-red-600 font-light" role="alert">
+                {submitError}
+              </p>
+            )}
+
             <button
               type="submit"
-              className="w-full px-8 py-3 bg-stone-900 text-stone-50 hover:bg-stone-800 transition-colors duration-300 font-light tracking-wide text-sm"
+              disabled={submitting || isUploading}
+              className="w-full px-8 py-3 bg-stone-900 text-stone-50 hover:bg-stone-800 transition-colors duration-300 font-light tracking-wide text-sm disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Submit Your Story
+              {submitting || isUploading ? 'Submitting…' : 'Submit Your Story'}
             </button>
           </form>
         )}
