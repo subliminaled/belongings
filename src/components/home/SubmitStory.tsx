@@ -20,6 +20,8 @@ const IMAGE_MAX = 2;
 
 export default function SubmitStory() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormFields>({
     fullName: '',
     email: '',
@@ -72,17 +74,46 @@ export default function SubmitStory() {
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    images.forEach((entry) => {
-      URL.revokeObjectURL(entry.url);
-      createdUrlsRef.current.delete(entry.url);
-    });
-    setImages([]);
-    setFormData({ fullName: '', email: '', phone: '', objectName: '', description: '' });
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
+    setSubmitError(null);
+    setSubmitting(true);
+
+    try {
+      const data = new FormData();
+      data.set('fullName', formData.fullName);
+      data.set('email', formData.email);
+      data.set('phone', formData.phone);
+      data.set('objectName', formData.objectName);
+      data.set('description', formData.description);
+      images.forEach((entry) => data.append('images', entry.file));
+
+      const res = await fetch('/api/submit-story', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (!res.ok) {
+        const body = (await res.json()) as { error?: string };
+        setSubmitError(body.error ?? 'Submission failed. Please try again.');
+        return;
+      }
+
+      // Clean up preview URLs
+      images.forEach((entry) => {
+        URL.revokeObjectURL(entry.url);
+        createdUrlsRef.current.delete(entry.url);
+      });
+      setImages([]);
+      setFormData({ fullName: '', email: '', phone: '', objectName: '', description: '' });
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch {
+      setSubmitError('An unexpected error occurred. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const inputClass =
@@ -216,7 +247,7 @@ export default function SubmitStory() {
               <span className={labelClass}>
                 Upload Images{' '}
                 <span className="text-stone-400 normal-case tracking-normal font-light">
-                  (up to {IMAGE_MAX}, optional)
+                  (at least 1, up to {IMAGE_MAX})
                 </span>
               </span>
 
@@ -281,11 +312,18 @@ export default function SubmitStory() {
               )}
             </div>
 
+            {submitError && (
+              <p className="text-sm text-red-600 font-light" role="alert">
+                {submitError}
+              </p>
+            )}
+
             <button
               type="submit"
-              className="w-full px-8 py-3 bg-stone-900 text-stone-50 hover:bg-stone-800 transition-colors duration-300 font-light tracking-wide text-sm"
+              disabled={submitting}
+              className="w-full px-8 py-3 bg-stone-900 text-stone-50 hover:bg-stone-800 transition-colors duration-300 font-light tracking-wide text-sm disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Submit Your Story
+              {submitting ? 'Submitting…' : 'Submit Your Story'}
             </button>
           </form>
         )}
