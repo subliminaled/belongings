@@ -1,10 +1,6 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { generateReactHelpers } from '@uploadthing/react';
-import type { OurFileRouter } from '@/lib/uploadthing';
-
-const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
 interface FormFields {
   fullName: string;
@@ -37,8 +33,6 @@ export default function SubmitStory() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   // Tracks all created URLs so we can revoke them on unmount.
   const createdUrlsRef = useRef<Set<string>>(new Set());
-
-  const { startUpload, isUploading } = useUploadThing('imageUploader');
 
   // Revoke any un-revoked URLs when the component unmounts.
   useEffect(() => {
@@ -86,22 +80,22 @@ export default function SubmitStory() {
     setSubmitting(true);
 
     try {
-      // Upload images to UploadThing and collect their URLs
-      const uploaded = await startUpload(images.map((entry) => entry.file));
-      const imageUrls = (uploaded ?? []).map((f) => f.ufsUrl).filter(Boolean);
+      const data = new FormData();
+      data.set('fullName', formData.fullName);
+      data.set('email', formData.email);
+      data.set('phone', formData.phone);
+      data.set('objectName', formData.objectName);
+      data.set('description', formData.description);
+      images.forEach((entry) => data.append('images', entry.file));
 
       const res = await fetch('/api/submit-story', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          imageUrls,
-        }),
+        body: data,
       });
 
       if (!res.ok) {
-        const data = (await res.json()) as { error?: string };
-        setSubmitError(data.error ?? 'Submission failed. Please try again.');
+        const body = (await res.json()) as { error?: string };
+        setSubmitError(body.error ?? 'Submission failed. Please try again.');
         return;
       }
 
@@ -326,10 +320,10 @@ export default function SubmitStory() {
 
             <button
               type="submit"
-              disabled={submitting || isUploading}
+              disabled={submitting}
               className="w-full px-8 py-3 bg-stone-900 text-stone-50 hover:bg-stone-800 transition-colors duration-300 font-light tracking-wide text-sm disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {submitting || isUploading ? 'Submitting…' : 'Submit Your Story'}
+              {submitting ? 'Submitting…' : 'Submit Your Story'}
             </button>
           </form>
         )}
