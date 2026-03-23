@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UTApi } from 'uploadthing/server';
 
-const utapi = new UTApi();
-
 export async function POST(request: NextRequest) {
   let formData: FormData;
 
@@ -41,15 +39,28 @@ export async function POST(request: NextRequest) {
   }
 
   // Upload images to UploadThing
-  const results = await utapi.uploadFiles(imageFiles);
-  const failed = results.filter((r) => r.error !== null);
+  let results: Awaited<ReturnType<UTApi['uploadFiles']>>;
+  try {
+    const utapi = new UTApi();
+    results = await utapi.uploadFiles(imageFiles);
+  } catch (err) {
+    console.error('[submit-story] UTApi.uploadFiles threw:', err);
+    return NextResponse.json(
+      { error: 'Image upload failed. Ensure UPLOADTHING_TOKEN is set.' },
+      { status: 500 },
+    );
+  }
+
+  const resultsArray = Array.isArray(results) ? results : [results];
+  const failed = resultsArray.filter((r) => r.error !== null);
   if (failed.length > 0) {
+    console.error('[submit-story] Upload errors:', failed.map((r) => r.error));
     return NextResponse.json(
       { error: 'Failed to upload one or more images.' },
       { status: 500 },
     );
   }
-  const imageUrls = results.filter((r) => r.data).map((r) => r.data!.ufsUrl);
+  const imageUrls = resultsArray.filter((r) => r.data).map((r) => r.data!.ufsUrl);
 
   // TODO: Send submission fields (fullName, email, phone: formData.get('phone'), objectName, description, imageUrls) to an email
 
