@@ -21,8 +21,10 @@ export default function Stories() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {stories.map((story) => (
-            <article key={story.title} className="group">
+          {stories
+            .filter((story) => story.showInStories !== false)
+            .map((story) => (
+              <article key={story.title} className="group">
               <div className="aspect-[4/3] bg-stone-100 rounded-sm overflow-hidden mb-5 border border-stone-200">
                 {story.youtubeId ? (
                   <iframe

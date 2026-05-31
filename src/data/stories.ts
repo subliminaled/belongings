@@ -4,9 +4,20 @@ export interface Story {
   excerpt: string;
   youtubeId: string;
   thumbnail: string;
+  showInStories?: boolean;
 }
 
+export const teaserStory: Story = {
+  title: 'Teaser',
+  person: 'Belongings',
+  excerpt: 'A short teaser for the Belongings series.',
+  youtubeId: 'nZ-BFty5PZg',
+  thumbnail: '/images/thumb/teaser.png',
+  showInStories: false,
+};
+
 const stories: Story[] = [
+  teaserStory,
   {
     title: 'Heart Shaped Stone',
     person: 'Ren Caldwell',

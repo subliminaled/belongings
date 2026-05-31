@@ -15,13 +15,13 @@ const filmmakers: Filmmaker[] = [
   {
     name: 'Bella Brown',
     role: 'Producer',
-    bio: 'Bella Brown (she/her) is an arts worker, film producer, and writer born and raised in Seattle. She currently works for the Seattle Art Museum’s Creative Studio leading design, photography, and video projects across their three locations. Beyond her 9-5, you can find her in the pit at a concert, reading on the roof, running, practicing backbends, or hosting her next semi-elaborate dinner party.',
+    bio: 'Bella Brown (she/her) is an arts worker, film producer, and writer born and raised in Seattle. She currently works for the Seattle Art Museum’s Creative Studio leading design, photography, and video projects across their three locations. ',
     image: '/images/filmmakers/bella.jpeg',
   },
   {
     name: 'Ed Castañeda (SubliminalEd Films)',
     role: 'Producer',
-    bio: 'Coolbreeze.',
+    bio: 'Ed is a writer, director and producer behind SubliminalEd Films focusing on bring authentic stories to life on the screen.',
     image: '/images/filmmakers/ed.jpg',
   },
 ];
