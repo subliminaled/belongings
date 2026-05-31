@@ -24,14 +24,22 @@ export default function Stories() {
           {stories.map((story) => (
             <article key={story.title} className="group">
               <div className="aspect-[4/3] bg-stone-100 rounded-sm overflow-hidden mb-5 border border-stone-200">
-                <iframe
-                  src={getYouTubeEmbedUrl(story.youtubeId)}
-                  title={story.title}
-                  className="h-full w-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
+                {story.youtubeId ? (
+                  <iframe
+                    src={getYouTubeEmbedUrl(story.youtubeId)}
+                    title={story.title}
+                    className="h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                ) : (
+                  <img
+                    src={story.thumbnail}
+                    alt={story.title}
+                    className="h-full w-full object-cover"
+                  />
+                )}
               </div>
               <p className="text-xs text-amber-700 font-medium uppercase tracking-widest mb-2">
                 {story.person}
@@ -42,14 +50,18 @@ export default function Stories() {
               <p className="text-sm text-stone-600 font-light leading-relaxed mb-4">
                 {story.excerpt}
               </p>
-              <a
-                href={getYouTubeWatchUrl(story.youtubeId)}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs text-stone-900 font-medium uppercase tracking-widest border-b border-stone-400 hover:border-amber-700 hover:text-amber-700 transition-colors duration-300 pb-0.5"
-              >
-                Watch Story
-              </a>
+              {story.youtubeId ? (
+                <a
+                  href={getYouTubeWatchUrl(story.youtubeId)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-stone-900 font-medium uppercase tracking-widest border-b border-stone-400 hover:border-amber-700 hover:text-amber-700 transition-colors duration-300 pb-0.5"
+                >
+                  Watch Story
+                </a>
+              ) : (
+                <span className="text-xs text-stone-500 font-medium uppercase tracking-widest pb-0.5">Coming soon</span>
+              )}
             </article>
           ))}
         </div>

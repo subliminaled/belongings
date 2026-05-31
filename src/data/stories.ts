@@ -3,6 +3,7 @@ export interface Story {
   person: string;
   excerpt: string;
   youtubeId: string;
+  thumbnail: string;
 }
 
 const stories: Story[] = [
@@ -11,21 +12,25 @@ const stories: Story[] = [
     person: 'Ren Caldwell',
     excerpt:
       'Amethyst holds the energy, good or bad and offers relief.',
-    youtubeId: 'EmAeLfi2dGk',
+    youtubeId: 'zynIiJuOdPc',
+    thumbnail: '/images/thumb/stone.png',
   },
   {
     title: "Eastside Hat",
     person: 'Ed Castañeda',
     excerpt:
       'A knit hat from the mean streets of East Toledo does more than keep the head warm.',
-    youtubeId: 'FsFGhe_oHNs',
+    youtubeId: '',
+    thumbnail: '/images/thumb/hat.png',
+
   },
   {
     title: 'Sharp Edges',
     person: 'Nate Fieldson',
     excerpt:
       'Strong, purposeful steel.',
-    youtubeId: 'aicg1Ba4DJ0',
+    youtubeId: '',
+    thumbnail: '/images/thumb/knife.png',
   },
 ];
 
