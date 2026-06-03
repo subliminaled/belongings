@@ -25,23 +25,34 @@ export default function Hero() {
 
           {/* Top: eyebrow / title / subhead */}
           <div className="pt-6 sm:pt-8 lg:pt-12">
+{/*             <div className="flex items-center gap-3 mb-4">
+              <span className="block w-8 h-px bg-amber-600" />
+              <span className="text-xs text-amber-500 tracking-widest uppercase font-medium">
+                 A short web docuseries
+              </span>
+            </div> */}
+
+{/*             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-light leading-none tracking-tight text-white mb-4">
+              Belongings
+            </h1>
+
+            <div className="w-16 h-px bg-stone-500 mb-4" /> */}
+
+{/*             <p className="text-sm sm:text-base text-stone-200 font-light leading-relaxed max-w-xl xl:max-w-3xl">
+              Exploring real human connections to the material world
+            </p> */}
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-light leading-none tracking-tight text-white mb-4">
+              Exploring real human connections to the material world
+            </h1>
             <div className="flex items-center gap-3 mb-4">
               <span className="block w-8 h-px bg-amber-600" />
               <span className="text-xs text-amber-500 tracking-widest uppercase font-medium">
                  A short web docuseries
               </span>
             </div>
-
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-light leading-none tracking-tight text-white mb-4">
-              Belongings
-            </h1>
-
-            <div className="w-16 h-px bg-stone-500 mb-4" />
-
-            <p className="text-sm sm:text-base text-stone-200 font-light leading-relaxed max-w-xl xl:max-w-3xl">
-              Exploring real human connections to the material world
-            </p>
           </div>
+
+
 
           {/* Middle: teaser */}
           <div className="flex items-center justify-center py-6">
