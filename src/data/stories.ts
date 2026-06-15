@@ -31,7 +31,7 @@ const stories: Story[] = [
     person: 'Ed Castañeda',
     excerpt:
       'A knit hat from the mean streets of East Toledo does more than keep the head warm.',
-    youtubeId: '',
+    youtubeId: 'mL567RQejHE',
     thumbnail: '/images/thumb/hat.png',
 
   },
