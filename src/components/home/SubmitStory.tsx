@@ -31,6 +31,7 @@ export default function SubmitStory() {
   });
   const [images, setImages] = useState<ImageEntry[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const submittingRef = useRef(false);
   // Tracks all created URLs so we can revoke them on unmount.
   const createdUrlsRef = useRef<Set<string>>(new Set());
 
@@ -76,6 +77,9 @@ export default function SubmitStory() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (submittingRef.current) return;
+
+    submittingRef.current = true;
     setSubmitError(null);
     setSubmitting(true);
 
@@ -112,6 +116,7 @@ export default function SubmitStory() {
     } catch {
       setSubmitError('An unexpected error occurred. Please try again.');
     } finally {
+      submittingRef.current = false;
       setSubmitting(false);
     }
   };

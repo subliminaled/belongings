@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
   if (insertError) {
     console.error('[submit-story] Supabase insert failed:', insertError);
     return NextResponse.json(
-      { error: 'Images uploaded successfully, but saving the story submission failed.' },
+      { error: 'Your file uploaded, but your story was not saved. Please try again.' },
       { status: 500 },
     );
   }
