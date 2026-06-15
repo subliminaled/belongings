@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UTApi } from 'uploadthing/server';
+import { supabase } from '@/lib/supabaseClient';
 
 export async function POST(request: NextRequest) {
   let formData: FormData;
@@ -12,6 +13,7 @@ export async function POST(request: NextRequest) {
 
   const fullName = formData.get('fullName') as string | null;
   const email = formData.get('email') as string | null;
+  const phone = formData.get('phone') as string | null;
   const objectName = formData.get('objectName') as string | null;
   const description = formData.get('description') as string | null;
   const imageFiles = formData.getAll('images').filter((f): f is File => f instanceof File);
@@ -60,9 +62,33 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
-  const imageUrls = resultsArray.filter((r) => r.data).map((r) => r.data!.ufsUrl);
+  const uploadedFiles = resultsArray
+    .filter((r): r is typeof r & { data: NonNullable<typeof r.data> } => r.data !== null)
+    .map((r) => ({
+      url: r.data.ufsUrl,
+      key: r.data.key,
+      name: r.data.name,
+      size: r.data.size,
+      type: r.data.type,
+    }));
+  const imageUrls = uploadedFiles.map((file) => file.url);
 
-  // TODO: Send submission fields (fullName, email, phone: formData.get('phone'), objectName, description, imageUrls) to an email
+  const { error: insertError } = await supabase.from('submissions').insert({
+    full_name: fullName,
+    email,
+    phone: phone || null,
+    object_name: objectName,
+    description,
+    image_urls: imageUrls,
+  });
+
+  if (insertError) {
+    console.error('[submit-story] Supabase insert failed:', insertError);
+    return NextResponse.json(
+      { error: 'Your file uploaded, but your story was not saved. Please try again.' },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({ success: true, imageUrls });
 }
