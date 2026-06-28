@@ -40,7 +40,7 @@ const stories: Story[] = [
     person: 'Nate Fieldson',
     excerpt:
       'Strong, purposeful steel.',
-    youtubeId: '45wolv_NDAfkVHix',
+    youtubeId: 'OL0lXKZeXYE',
     thumbnail: '/images/thumb/knife.png',
   },
 ];
